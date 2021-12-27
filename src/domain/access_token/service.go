@@ -8,10 +8,14 @@ import (
 
 type Repository interface {
 	GetById(string) (*AccessToken, *errors.RestErr)
+	Create(AccessToken) *errors.RestErr
+	UpdateExpirationTime(AccessToken) *errors.RestErr
 }
 
 type Service interface {
 	GetById(string) (*AccessToken, *errors.RestErr)
+	Create(AccessToken) *errors.RestErr
+	UpdateExpirationTime(AccessToken) *errors.RestErr
 }
 
 type service struct {
@@ -19,7 +23,7 @@ type service struct {
 }
 
 func NewService(repo Repository) Service {
-	// look for this access token in a given database 
+	// look for this access token in a given database
 	return &service{
 		repository: repo,
 	}
@@ -35,4 +39,18 @@ func (s *service) GetById(AccessTokenId string) (*AccessToken, *errors.RestErr) 
 		return nil, err
 	}
 	return AccessToken, nil
+}
+
+func (s *service) Create(at AccessToken) *errors.RestErr {
+	if err := at.Validate(); err != nil {
+		return err
+	}
+	return s.repository.Create(at)
+}
+
+func (s *service) UpdateExpirationTime(at AccessToken) *errors.RestErr {
+	if err := at.Validate(); err != nil {
+		return err
+	}
+	return s.repository.UpdateExpirationTime(at)
 }
