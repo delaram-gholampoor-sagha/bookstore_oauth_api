@@ -16,14 +16,18 @@ var (
 	}
 )
 
-type RestUserRepositoty interface {
+type RestUsersRepository interface {
 	LoginUser(string, string) (*users.User, *errors.RestErr)
 }
 
 type usersRepository struct {
 }
 
-func NewRepository() RestUserRepositoty {
+func NewRestUsersRepository() RestUsersRepository {
+	return &usersRepository{}
+}
+
+func NewRepository() RestUsersRepository {
 	return &usersRepository{}
 }
 
